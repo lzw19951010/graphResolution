@@ -10,6 +10,12 @@ typedef struct nodeInfo
 	int x;
 	int y;
 	int z;
-}nodeInfo,info;
+}nodeInfo;
 
+typedef struct edgeInfo
+{
+	int start;
+	int end;
+	double weigh;
+}edgeInfo;
 #endif
