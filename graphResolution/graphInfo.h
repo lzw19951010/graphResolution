@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+#define MAX 10000
 typedef struct nodeInfo
 {
 	int ID;//½Úµã±àºÅ
@@ -27,9 +28,11 @@ class Graph
 public:
 	vector <nodeInfo> node;
 	vector <edgeInfo> edge;
-
+	vector < vector <double> > arcs; //ÁÚ½Ó¾ØÕó
 	Graph(){};
 	~Graph(){};
+
 	void initGraphFromFile(string infileName);
+
 };
 #endif

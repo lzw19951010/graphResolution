@@ -1,0 +1,112 @@
+
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#define MAX 1000000
+using namespace std;
+vector < vector <int> > arcs;//邻接矩阵
+vector <int> D;//保存最短路径长度
+vector <int> Q;
+vector <int> final;//若final[i] == 1则说明 顶点vi已在集合S中
+int n = 0;//顶点个数
+int m = 0;//边个数
+int v0 = 0;//源点
+int v,w;
+void ShortestPath_DIJ()
+{
+     for (v = 0; v < n; v++) //循环 初始化
+     {
+          final[v] = 0; 
+		  D[v] = arcs[v0][v];
+		  if(D[v] == MAX)    
+			  Q[v] = -1;
+		  else 
+			  Q[v] = v0;
+     }
+     D[v0] = 0; final[v0] = 1; 
+     for (int i = 1; i < n; i++)
+     {
+          int min = MAX;
+          for (w = 0; w < n; w++)
+          {
+               if (!final[w])
+               {
+                    if (D[w] < min) 
+					{
+						v = w; 
+						min = D[w];
+					}
+               }
+          }
+          final[v] = 1; //选出该点后加入到合集S中
+          for (w = 0; w < n; w++)//更新当前最短路径和距离
+          {
+               if (!final[w] && (min+arcs[v][w]<D[w]))
+               {
+                    D[w] = min + arcs[v][w];
+                    Q[w] = v;
+               }
+          }
+     }
+}
+ 
+ 
+int main()
+{
+    cin >> n >> m;
+	arcs.resize(n);
+	D.resize(n);
+	final.resize(n);
+
+	for (v = 0; v < n; v++)
+	{
+		arcs[v].resize(n,MAX);
+	}
+	int start,end,weight;
+	int i;
+    for (i = 0; i < m; i++)
+    {
+		cin >> start >> end >> weight;
+		arcs[start][end] = weight;
+    }
+	int q;
+	cin >> q >> v0;
+	vector <int> destination(q);
+	for (i = 0; i < q; i++)
+	{
+		cin >> destination[i];
+	}
+	Q.resize(n);
+	ShortestPath_DIJ();
+	for (i = 0; i < q; i++)
+	{
+		if (destination[i] == v0)
+		{
+			cout << v0 <<"-"<<v0<< " "<< 0 <<endl;
+		}
+		else if (D[destination[i]] == MAX)
+		{
+			cout << "NO PATH" << endl;
+		}
+		else
+		{
+			int pre = destination[i];
+			vector <int> stack;
+			stack.clear();
+			while (pre != v0)
+			{
+				
+				stack.push_back(Q[pre]);
+				pre = Q[pre];
+			}
+			for (int j = stack.size() - 1; j >= 0 ; j--)
+			{
+				cout <<  stack[j] <<"-";
+			}
+			cout << destination[i] << " " << D[destination[i]] << endl;
+		}
+	}
+    return 0;
+}
+编译器输出
+服务器时间 2015/12/26 18:49:49 数据报错 © yuzeming v1.1.150917

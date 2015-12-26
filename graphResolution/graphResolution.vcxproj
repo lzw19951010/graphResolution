@@ -80,9 +80,11 @@
   <ItemGroup>
     <ClCompile Include="graphInfo.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="resolution.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphInfo.h" />
+    <ClInclude Include="resolution.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
