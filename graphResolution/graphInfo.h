@@ -1,15 +1,18 @@
 #ifndef GRAPHINFO_H
 #define GRAPHINFO_H
 #include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
 using namespace std;
 typedef struct nodeInfo
 {
 	int ID;//节点编号
 	string name;//节点名称
 	//节点的XYZ坐标
-	int x;
-	int y;
-	int z;
+	double x;
+	double y;
+	double z;
 }nodeInfo;
 
 typedef struct edgeInfo
@@ -18,4 +21,15 @@ typedef struct edgeInfo
 	int end;
 	double weigh;
 }edgeInfo;
+
+class Graph
+{
+public:
+	vector <nodeInfo> node;
+	vector <edgeInfo> edge;
+
+	Graph(){};
+	~Graph(){};
+	void initGraphFromFile(string infileName);
+};
 #endif
