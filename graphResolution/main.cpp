@@ -6,38 +6,41 @@ int main()
 	string infileName = "2.Online Social Network.net";
 	G.initGraphFromFile(infileName);
 	vector <int> Q;
-	int v0 = 1;
-	int destination = 947;
-	for(int i = 2; i < 1900; ++i)
+	int v0, destination;
+	cin >> v0 >> destination;
+	double res = DIJK(G,v0,destination,Q);
+	if (destination == v0)
 	{
-		destination = i;
-		double res = DIJK(G,v0,destination,Q);
-		if (destination == v0)
+		cout << v0 <<"-"<<v0<< " "<< 0 <<endl;
+	}
+	else if (res == MAX)
+	{
+		cout << "NO PATH" << endl;
+		system("pause");
+	}
+	else
+	{
+		int pre = destination;
+		vector <int> stack;
+		stack.clear();
+		while (pre != v0)
 		{
-			cout << v0 <<"-"<<v0<< " "<< 0 <<endl;
+			stack.push_back(Q[pre]);
+			pre = Q[pre];
 		}
-		else if (res == MAX)
+		for (int j = stack.size() - 1; j >= 0 ; j--)
 		{
-			cout << "NO PATH" << endl;
-			system("pause");
+			cout <<  stack[j] <<"-";
 		}
-		else
-		{
-			int pre = destination;
-			vector <int> stack;
-			stack.clear();
-			while (pre != v0)
-			{
+		cout << destination<< " " << res << endl;
+	}
+	vector<edgeInfo> V;
 
-				stack.push_back(Q[pre]);
-				pre = Q[pre];
-			}
-			for (int j = stack.size() - 1; j >= 0 ; j--)
-			{
-				cout <<  stack[j] <<"-";
-			}
-			cout << destination<< " " << res << endl;
-		}
+	double sum = Prim(G, V);
+	cout << sum << endl;
+	for(int i = 0; i < V.size(); ++i)
+	{
+		cout << V[i].start << "-" << V[i].end << " ";
 	}
 	
 	return 0;

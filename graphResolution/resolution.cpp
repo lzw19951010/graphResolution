@@ -42,3 +42,67 @@ double DIJK(Graph& G,int v0, int end, vector <int> &Q)
 	return D[end];
 }
 
+// Prim算法生成最小生成树
+double Prim(Graph G, vector<edgeInfo> &eI)
+{
+	
+	int min, i, j, k;
+	vector <int> adjvex;		// 保存相关顶点下标
+	vector <int> lowcost;	// 保存相关顶点间边的权值
+	adjvex.resize(G.node.size());
+	lowcost.resize(G.node.size());
+	lowcost[1] = 0;			// V0作为最小生成树的根开始遍历，权值为0
+	adjvex[1] = 1;			// V0第一个加入
+	double length = 0;
+	int start, end;
+	// 初始化操作
+	for(i = 2; i < G.node.size(); i++)
+	{
+		lowcost[i] = G.arcs[1][i];	// 将邻接矩阵第0行所有权值先加入数组
+		adjvex[i] = 1;				// 初始化全部先为V0的下标
+	}
+
+	// 真正构造最小生成树的过程
+	for(i = 2; i < G.node.size(); i++ )
+	{
+		min = MAX;		// 初始化最小权值为65535等不可能数值
+		j = 2;
+		k = 0;
+
+		// 遍历全部顶点
+		while( j < G.node.size() )
+		{
+			// 找出lowcost数组已存储的最小权值
+			if( lowcost[j]!=0 && lowcost[j] < min )
+			{
+				min = lowcost[j];
+				k = j;		// 将发现的最小权值的下标存入k，以待使用。
+			}
+			j++;
+		}
+		if(min == MAX)
+		{
+			break;
+		}
+		length += G.arcs[adjvex[k]][k];
+		edgeInfo e;
+		e.start = adjvex[k];
+		e.end = k;
+		e.weigh = G.arcs[adjvex[k]][k];
+		eI.push_back(e);
+		lowcost[k] = 0;		// 将当前顶点的权值设置为0，表示此顶点已经完成任务，进行下一个顶点的遍历
+
+		// 邻接矩阵k行逐个遍历全部顶点
+		for( j=2; j < G.node.size(); j++ )
+		{
+			if( lowcost[j]!=0 && G.arcs[k][j] < lowcost[j] )
+			{
+				lowcost[j] = G.arcs[k][j];
+				adjvex[j] = k;	
+			}
+		}
+	}
+
+	return length;
+	
+}
