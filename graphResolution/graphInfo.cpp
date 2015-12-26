@@ -6,7 +6,6 @@ void Graph::initGraphFromFile(string infileName)	//从文件初始化图信息
 	int numOfVertices,numOfEdge,i;
 	string temp;
 	edgeInfo tempEdge;
-	char tempChar;
 
 	in >> temp >> numOfVertices;//获取节点数量
 
@@ -16,8 +15,7 @@ void Graph::initGraphFromFile(string infileName)	//从文件初始化图信息
 	for (i = 1; i <= numOfVertices;i++)
 	{
 		in >> node[i].ID;
-		in >> tempChar;
-		getline(in,node[i].name,'"');
+		in >> node[i].name;
 		in >> node[i].x >> node[i].y >> node[i].z;
 		arcs[i].resize(numOfVertices+1,MAX);
 	}//获取节点信息
