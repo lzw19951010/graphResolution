@@ -28,3 +28,55 @@ void Graph::initGraphFromFile(string infileName)	//从文件初始化图信息
 		edge.push_back(tempEdge);//获取边信息
 	}
 }
+
+void Graph::outputToJS(string outfileName)
+{
+	ofstream outfile(outfileName);
+	outfile << "var Graph = { \"nodes\": [";
+	for(int i = 1; i < node.size(); ++i)
+	{
+		outfile << "{";
+		outfile << "name:";
+		outfile << node[i].name;
+		outfile << "}";
+		if(i != node.size()-1)
+		{
+			outfile << ",";
+		}
+	}
+	outfile << "];, \"edges\": [";
+	for(int i = 1; i < edge.size(); ++i)
+	{
+		outfile << "{";
+		outfile << "source:";
+		outfile << edge[i].start-1;
+		outfile << ",target:";
+		outfile << edge[i].end-1;
+		outfile << "}";
+		if(i != edge.size()-1)
+		{
+			outfile << ",";
+		}
+	}
+	/*
+	outfile << "];,\"arcs\":[";
+	for(int i = 1; i < node.size(); ++i)
+	{
+		outfile << "[";
+		for(int j = 1; j < node.size(); ++j)
+		{
+			outfile << arcs[i][j];
+			if(j != node.size()-1)
+			{
+				outfile << ",";
+			}
+		}
+		outfile << "]";
+		if(i != node.size()-1)
+		{
+			outfile << ",";
+		}
+	}
+	*/
+	outfile << "];};";
+}

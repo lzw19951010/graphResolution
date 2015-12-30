@@ -33,6 +33,7 @@ public:
 	~Graph(){};
 
 	void initGraphFromFile(string infileName);
+	void outputToJS(string outfileName);
 
 };
 #endif

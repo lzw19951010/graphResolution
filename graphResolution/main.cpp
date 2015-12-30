@@ -5,6 +5,7 @@ int main()
 	Graph G;
 	string infileName = "2.Online Social Network.net";
 	G.initGraphFromFile(infileName);
+	/*
 	vector <int> Q;
 	int v0, destination;
 	cin >> v0 >> destination;
@@ -42,6 +43,9 @@ int main()
 	{
 		cout << V[i].start << "-" << V[i].end << " ";
 	}
+	*/
+
+	G.outputToJS("graph.js");
 	
 	return 0;
 }
