@@ -40,6 +40,7 @@ void Graph::screenFromGraph(Graph &G)
 	}
 
 	vector<int> id(2,1);
+	G.node.push_back(node[1]);
 	
 	for(int i = 1; i < id.size(); ++i)
 	{
