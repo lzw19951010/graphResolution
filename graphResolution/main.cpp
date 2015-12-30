@@ -5,6 +5,9 @@ int main()
 	Graph G;
 	string infileName = "2.Online Social Network.net";
 	G.initGraphFromFile(infileName);
+	Graph sG;
+	G.screenFromGraph(sG);
+
 	/*
 	vector <int> Q;
 	int v0, destination;
@@ -45,7 +48,7 @@ int main()
 	}
 	*/
 
-	G.outputToJS("graph.js");
+	sG.outputToJS("graph.js");
 	
 	return 0;
 }

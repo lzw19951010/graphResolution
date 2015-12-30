@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 using namespace std;
 #define MAX 10000
 typedef struct nodeInfo
@@ -34,6 +35,7 @@ public:
 
 	void initGraphFromFile(string infileName);
 	void outputToJS(string outfileName);
+	void screenFromGraph(Graph &G);
 
 };
 #endif
