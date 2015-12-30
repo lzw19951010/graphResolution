@@ -65,8 +65,8 @@ void Graph::screenFromGraph(Graph &G)
 			if(G.arcs[i][j] < MAX)
 			{
 				edgeInfo temp;
-				temp.start = id[i];
-				temp.end = id[j];
+				temp.start = i;
+				temp.end = j;
 				temp.weigh = G.arcs[i][j];
 				G.edge.push_back(temp);
 			}
