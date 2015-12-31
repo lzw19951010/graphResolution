@@ -11,7 +11,11 @@
 </script>
 	<button type="button" onclick="DIJK()">最短路径</button>
 	<button type="button" onclick="Prim()">最小生成树</button>
-	<button type="button" onclick="Reset()">重置</button>
+	<button type="button" onclick="Reset()">重置</button><br>
+	最短路径长度:
+	<output id = "output1"></output><br>
+	最小生成树长度：
+	<output id = "output2"></output>
     <form>
       source: <input type="text" name="source" id="source"><br>
       target: <input type="text" name="target" id="target">
@@ -19,11 +23,14 @@
 
 	<script type="text/javascript">
 	var Q = new Array(200);
-
+	var output1 = document.getElementById("output1");
+	var output2 = document.getElementById("output2");
 	var v0;
 	var end;
 	 function DIJK()
 	{
+		output1.value = "";
+		output2.value = "";
 		var s = document.getElementById("source");
 		var e = document.getElementById("target");
 		v0 = parseInt(s.value);
@@ -101,11 +108,14 @@
 
 
 		}  
+		output1.value = D[end];
 		return D[end];
 
 	}
 	function Prim()
 	{
+		output1.value = "";
+		output2.value = "";
 		svg.selectAll("circle").attr("r",6);
 		svg.selectAll("line").style("stroke-width",0).style("stroke","#ccc");
 		var min, i, j, k;
@@ -176,12 +186,14 @@
 				}
 			}
 		}
-
+		output2.value = length;
 		return length;
 		
 	}
 	function Reset()
 	{
+		output1.value = "";
+		output2.value = "";
 		svg.selectAll("circle").attr("r",6);
 		svg.selectAll("line").style("stroke-width",1).style("stroke","#ccc");
 	}
