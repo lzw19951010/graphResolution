@@ -133,8 +133,7 @@ void Graph::outputToJS(string outfileName)
 			outfile << ",";
 		}
 	}
-	/*
-	outfile << "];,\"arcs\":[";
+	outfile << "],\"arcs\":[";
 	for(int i = 1; i < node.size(); ++i)
 	{
 		outfile << "[";
@@ -152,6 +151,5 @@ void Graph::outputToJS(string outfileName)
 			outfile << ",";
 		}
 	}
-	*/
 	outfile << "]};";
 }
