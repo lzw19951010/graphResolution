@@ -1,92 +1,279 @@
-
 <html>
   <head>
-        <meta charset="utf-8">
-        <title>力导向图</title>
+    <meta charset="utf-8">
+    <title>
+      GraphResolution
+    </title>
   </head>
+  <body>
+  
+  <script src="graph.js" charset="utf-8" type="text/javascript">
+</script>
+	<button type="button" onclick="DIJK()">最短路径</button>
+	<button type="button" onclick="Prim()">最小生成树</button>
+	<button type="button" onclick="Reset()">重置</button>
+    <form>
+      source: <input type="text" name="source" id="source"><br>
+      target: <input type="text" name="target" id="target">
+    </form>
 
-<style>
+	<script type="text/javascript">
+	var Q = new Array(200);
+
+	var v0;
+	var end;
+	 function DIJK()
+	{
+		var s = document.getElementById("source");
+		var e = document.getElementById("target");
+		v0 = parseInt(s.value);
+		end = parseInt(e.value);
+		if(!(v0 < 200 && v0 >= 0 && end < 200 && end >= 0))
+		{
+			alert("请输入0~199之间的整数！（一共绘制了数据集中的200个节点）")
+			return;
+		}
+		var G = Graph;
+		var MAX = 10000;
+		var v,w;
+		var final = new Array(200);//若final[i] == 1则说明 顶点vi已在集合S中
+		var D = new Array(200);//保存最短路径长度
+		var i;
+		var min;
+		for (v = 0; v < 200; v++) //循环 初始化
+		{
+			final[v] = 0; 
+			D[v] = G.arcs[v0][v];
+			if(D[v] == MAX)    
+				Q[v] = -1;
+			else 
+				Q[v] = v0;
+		}
+		D[v0] = 0; final[v0] = 1; 
+		for (i = 1; i < 200; i++)
+		{
+			min = MAX;
+			for (w = 0; w < 200; w++)
+			{
+				if (!final[w])
+				{
+					if (D[w] < min) 
+					{
+						v = w; 
+						min = D[w];
+					}
+				}
+			}
+			final[v] = 1; //选出该点后加入到合集S中
+			for (w = 0; w < 200; w++)//更新当前最短路径和距离
+			{
+				if (!final[w] && (min+G.arcs[v][w]<D[w]))
+				{
+					D[w] = min + G.arcs[v][w];
+					Q[w] = v;
+				}
+			}
+		}
+		if (typeof(v0) != "undefined" && typeof(end)!="undefined") 
+		{ 
+			//更新信息
+			svg.selectAll("circle").attr("r",6);
+			svg.selectAll("line").style("stroke-width",0).style("stroke","#ccc");
+			var pre = end;
+			var strid = "#node" + v0.toString();
+			var p = svg.select(strid).attr("r",12);
+			while(pre != v0)
+			{
+				strid = "#node" + pre.toString();
+				p = svg.select(strid).attr("r",12);
+				if(pre < Q[pre])
+				{
+					strid = "#edge" + pre.toString() + "-" + Q[pre].toString();
+				}
+				else
+				{
+					strid = "#edge" + Q[pre].toString() + "-" + pre.toString();
+				}
+				var edgeinfo = svg.select(strid).style("stroke-width",4).style("stroke", "#FF0000");
+				pre = Q[pre];
+			} 
 
 
-</style>
-    <body>
-		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<script src="graph.js" charset="utf-8"></script>
-        <script>
 
-          alert(Graph.nodes[3].name);
+		}  
+		return D[end];
 
-		var width = 1400;
-		var height = 900;
+	}
+	function Prim()
+	{
+		svg.selectAll("circle").attr("r",6);
+		svg.selectAll("line").style("stroke-width",0).style("stroke","#ccc");
+		var min, i, j, k;
+		var MAX = 10000;
+		var adjvex = new Array(200);		// 保存相关顶点下标
+		var lowcost = new Array(200);	// 保存相关顶点间边的权值
+		var G = Graph;
+		lowcost[0] = 0;			// V0作为最小生成树的根开始遍历，权值为0
+		adjvex[0] = 0;			// V0第一个加入
+		var length = 0;
+		var start, end;
+		// 初始化操作
+		for(i = 1; i < 200; i++)
+		{
+			lowcost[i] = G.arcs[0][i];	// 将邻接矩阵第0行所有权值先加入数组
+			adjvex[i] = 0;				// 初始化全部先为V0的下标
+		}
+
+		// 真正构造最小生成树的过程
+		for(i = 1; i < 200; i++ )
+		{
+			min = MAX;		// 初始化最小权值为10000等不可能数值
+			j = 1;
+			k = 0;
+
+			// 遍历全部顶点
+			while(j < 200)
+			{
+				// 找出lowcost数组已存储的最小权值
+				if( lowcost[j]!=0 && lowcost[j] < min )
+				{
+					min = lowcost[j];
+					k = j;		// 将发现的最小权值的下标存入k，以待使用。
+				}
+				j++;
+			}
+			if(min == MAX)
+			{
+				break;
+			}
+			length += G.arcs[adjvex[k]][k];
+				//更新信息
+
+			var strid;
+			var p = svg.select(strid).attr("r",20);
+			var start = adjvex[k];
+			var end = k;
+			if(start < end)
+			{
+				strid = "#edge" + start.toString() + "-" + end.toString();
+			}
+			else
+			{
+				strid = "#edge" + end.toString() + "-" + start.toString();
+			}
+			var edgeinfo = svg.select(strid).style("stroke-width",1).style("stroke", "#66CDAA");
 
 
-		var svg = d3.select("body")
-					.append("svg")
-					.attr("width",width)
-					.attr("height",height);
+			lowcost[k] = 0;		// 将当前顶点的权值设置为0，表示此顶点已经完成任务，进行下一个顶点的遍历
 
-		var force = d3.layout.force()
-        .nodes(Graph.nodes)		//指定节点数组
-				.links(Graph.edges)		//指定连线数组
-				.size([width,height])	//指定范围
-				.linkDistance(150)	//指定连线长度
-				.charge([-400]);	//相互之间的作用力
+			// 邻接矩阵k行逐个遍历全部顶点
+			for( j=1; j < 200; j++ )
+			{
+				if( lowcost[j]!=0 && G.arcs[k][j] < lowcost[j] )
+				{
+					lowcost[j] = G.arcs[k][j];
+					adjvex[j] = k;	
+				}
+			}
+		}
 
-		force.start();	//开始作用
+		return length;
+		
+	}
+	function Reset()
+	{
+		svg.selectAll("circle").attr("r",6);
+		svg.selectAll("line").style("stroke-width",1).style("stroke","#ccc");
+	}
+    </script>
 
-
-		//添加连线
-		var svg_edges = svg.selectAll("line")
-							.data(Graph.edges)
-							.enter()
-							.append("line")
-							.style("stroke","#ccc")
-							.style("stroke-width",1);
-
-		var color = d3.scale.category20();
-
-		//添加节点
-		var svg_nodes = svg.selectAll("circle")
-							.data(Graph.nodes)
-							.enter()
-							.append("circle")
-							.attr("r",20)
-							.style("fill",function(d,i){
-								return color(i);
-							})
-							.call(force.drag);	//使得节点能够拖动
-
-		//添加描述节点的文字
-		var svg_texts = svg.selectAll("text")
-							.data(Graph.nodes)
-							.enter()
-							.append("text")
-							.style("fill", "black")
-							.attr("dx", 20)
-							.attr("dy", 8)
-							.text(function(d){
-								return d.name;
-							});
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8" type=
+    "text/javascript">
+</script><script type="text/javascript">
+            var width = 1400;
+                var height = 900;
 
 
-		force.on("tick", function(){	//对于每一个时间间隔
+                var svg = d3.select("body")
+                                        .append("svg")
+                                        .attr("width",width)
+                                        .attr("height",height);
 
-			 //更新连线坐标
-			 svg_edges.attr("x1",function(d){ return d.source.x; })
-			 		.attr("y1",function(d){ return d.source.y; })
-			 		.attr("x2",function(d){ return d.target.x; })
-			 		.attr("y2",function(d){ return d.target.y; });
+                var force = d3.layout.force()
+                                .nodes(Graph.nodes)             //指定节点数组
+                                .links(Graph.edges)             //指定连线数组
+                                .size([width,height])   //指定范围
+                                .linkDistance(150)      //指定连线长度
+                                .charge([-400]);        //相互之间的作用力
 
-			 //更新节点坐标
-			 svg_nodes.attr("cx",function(d){ return d.x; })
-			 		.attr("cy",function(d){ return d.y; });
+                force.start();  //开始作用
 
-			 //更新文字坐标
-			 svg_texts.attr("x", function(d){ return d.x; })
-			 	.attr("y", function(d){ return d.y; });
-		});
 
-        </script>
+                //添加连线
+                var svg_edges = svg.selectAll("line")
+                                                        .data(Graph.edges)
+                                                        .enter()
+                                                        .append("line")
+														.attr("id",function(d,i){
+															return "edge" + d.source.index.toString() + "-" +d.target.index.toString();
+														})
+                                                        .style("stroke","#ccc")
+                                                        .style("stroke-width",1);
 
-    </body>
+                var color = d3.scale.category20();
+
+                //添加节点
+                var svg_nodes = svg.selectAll("circle")
+                                                        .data(Graph.nodes)
+                                                        .enter()
+                                                        .append("circle")
+														.attr("id",function(d,i){
+															return "node" + i.toString();
+														})
+                                                        .attr("r",6)
+                                                        .style("fill",function(d,i){
+                                                                return color(i);
+                                                        })
+                                                        .call(force.drag);      //使得节点能够拖动
+
+			
+
+
+                //添加描述节点的文字
+                var svg_texts = svg.selectAll("text")
+                                                        .data(Graph.nodes)
+                                                        .enter()
+                                                        .append("text")
+                                                        .style("fill", "black")
+                                                        .attr("dx", 20)
+                                                        .attr("dy", 8)
+                                                        .text(function(d){
+                                                                return d.name;
+                                                        });
+
+
+                force.on("tick", function(){    //对于每一个时间间隔
+
+                         //更新连线坐标
+                         svg_edges.attr("x1",function(d){ return d.source.x; })
+                                        .attr("y1",function(d){ return d.source.y; })
+                                        .attr("x2",function(d){ return d.target.x; })
+                                        .attr("y2",function(d){ return d.target.y; });
+
+                         //更新节点坐标
+                         svg_nodes.attr("cx",function(d){ return d.x; })
+                                        .attr("cy",function(d){ return d.y; });
+
+                         //更新文字坐标
+                         svg_texts.attr("x", function(d){ return d.x; })
+                                .attr("y", function(d){ return d.y; });
+						//
+
+						
+                });
+						
+
+	//var p = svg.select("#node15").attr("r",20);
+    </script>
+  </body>
 </html>
